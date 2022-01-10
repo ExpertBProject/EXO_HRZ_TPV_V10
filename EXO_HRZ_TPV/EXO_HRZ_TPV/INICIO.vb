@@ -116,9 +116,15 @@ Public Class INICIO
                 Case "140"
                     Clase = New EXO_ODLN(objGlobal)
                     Return CType(Clase, EXO_ODLN).SBOApp_ItemEvent(infoEvento)
+                Case "133"
+                    Clase = New EXO_OINV(objGlobal)
+                    Return CType(Clase, EXO_OINV).SBOApp_ItemEvent(infoEvento)
                 Case "EXO_COBROT"
                     Clase = New EXO_COBROT(objGlobal)
                     Return CType(Clase, EXO_COBROT).SBOApp_ItemEvent(infoEvento)
+                Case "EXO_COBROTF"
+                    Clase = New EXO_COBROTF(objGlobal)
+                    Return CType(Clase, EXO_COBROTF).SBOApp_ItemEvent(infoEvento)
                 Case "EXOAPERTURA"
                     Clase = New EXO_Apertura(objGlobal)
                     Return CType(Clase, EXO_Apertura).SBOApp_ItemEvent(infoEvento)
@@ -144,6 +150,9 @@ Public Class INICIO
                 Case "140"
                     Clase = New EXO_ODLN(objGlobal)
                     Return CType(Clase, EXO_ODLN).SBOApp_FormDataEvent(infoEvento)
+                Case "133"
+                    Clase = New EXO_OINV(objGlobal)
+                    Return CType(Clase, EXO_OINV).SBOApp_FormDataEvent(infoEvento)
                 Case "EXOAPERTURA"
                     Clase = New EXO_Apertura(objGlobal)
                     Return CType(Clase, EXO_Apertura).SBOApp_FormDataEvent(infoEvento)

@@ -122,9 +122,11 @@
   <ItemGroup>
     <Compile Include="EXO_Apertura.vb" />
     <Compile Include="EXO_Cierre.vb" />
+    <Compile Include="EXO_COBROTF.vb" />
     <Compile Include="EXO_COBROT.vb" />
     <Compile Include="EXO_GLOBALES.vb" />
     <Compile Include="EXO_ODLN.vb" />
+    <Compile Include="EXO_OINV.vb" />
     <Compile Include="INICIO.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -211,6 +213,7 @@
     <EmbeddedResource Include="SQL_HANA\HANA_TEST_copbrosefectivo.sql" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FORMS\EXO_COBROTF.srf" />
     <Content Include="SQL_HANA\HANA_copbrosefectivo.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

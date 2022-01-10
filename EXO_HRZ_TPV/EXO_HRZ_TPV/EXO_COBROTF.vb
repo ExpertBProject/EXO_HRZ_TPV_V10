@@ -1,6 +1,7 @@
 ﻿Imports SAPbobsCOM
 Imports SAPbouiCOM
-Public Class EXO_COBROT
+Public Class EXO_COBROTF
+
     Private objGlobal As EXO_UIAPI.EXO_UIAPI
 
     Public Sub New(ByRef objG As EXO_UIAPI.EXO_UIAPI)
@@ -195,7 +196,7 @@ Public Class EXO_COBROT
             End Select
             sAccount = objGlobal.refDi.SQL.sqlStringB1(sSQL)
             ORCT.CashAccount = sAccount
-            ORCT.Remarks = "Entrega Nº" & oForm.DataSources.UserDataSources.Item("UDDOCNUM").Value.ToString
+            ORCT.Remarks = "Entraga Nº" & oForm.DataSources.UserDataSources.Item("UDDOCNUM").Value.ToString
             If sAccount <> "" Then
                 If ORCT.Add() = 0 Then
                     objGlobal.compañia.GetNewObjectCode(sDocEntryORCT)
