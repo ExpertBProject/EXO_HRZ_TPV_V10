@@ -21,7 +21,7 @@ Public Class EXO_COBROTF
             If infoEvento.InnerEvent = False Then
                 If infoEvento.BeforeAction = False Then
                     Select Case infoEvento.FormTypeEx
-                        Case "EXO_COBROT"
+                        Case "EXO_COBROTF"
                             Select Case infoEvento.EventType
                                 Case SAPbouiCOM.BoEventTypes.et_COMBO_SELECT
 
@@ -39,7 +39,7 @@ Public Class EXO_COBROTF
                     End Select
                 ElseIf infoEvento.BeforeAction = True Then
                     Select Case infoEvento.FormTypeEx
-                        Case "EXO_COBROT"
+                        Case "EXO_COBROTF"
                             Select Case infoEvento.EventType
                                 Case SAPbouiCOM.BoEventTypes.et_COMBO_SELECT
 
@@ -61,7 +61,7 @@ Public Class EXO_COBROTF
             Else
                 If infoEvento.BeforeAction = False Then
                     Select Case infoEvento.FormTypeEx
-                        Case "EXO_COBROT"
+                        Case "EXO_COBROTF"
                             Select Case infoEvento.EventType
                                 Case SAPbouiCOM.BoEventTypes.et_FORM_VISIBLE
                                     If EventHandler_Form_Visible(objGlobal, infoEvento) = False Then
@@ -79,7 +79,7 @@ Public Class EXO_COBROTF
                     End Select
                 Else
                     Select Case infoEvento.FormTypeEx
-                        Case "EXO_COBROT"
+                        Case "EXO_COBROTF"
                             Select Case infoEvento.EventType
                                 Case SAPbouiCOM.BoEventTypes.et_CHOOSE_FROM_LIST
 
@@ -134,7 +134,7 @@ Public Class EXO_COBROTF
 
             Select Case pVal.ItemUID
                 Case "1"
-                    Return Generar_Cobro_a_Cuenta(oForm)
+                    Return Generar_Cobro(oForm)
                     objGlobal.SBOApp.ActivateMenuItem("1044")
                     objGlobal.SBOApp.ActivateMenuItem("1304")
             End Select
@@ -175,14 +175,15 @@ Public Class EXO_COBROTF
             EXO_CleanCOM.CLiberaCOM.Form(oForm)
         End Try
     End Function
-    Private Function Generar_Cobro_a_Cuenta(ByRef oForm As SAPbouiCOM.Form) As Boolean
+    Private Function Generar_Cobro(ByRef oForm As SAPbouiCOM.Form) As Boolean
         Dim ORCT As SAPbobsCOM.Payments = Nothing
         Dim sDocEntryORCT As String = ""
         Dim sDocNumORCT As String = ""
         Dim sSQL As String = ""
         Dim sTIPO As String = ""
         Dim sAccount As String = ""
-        Generar_Cobro_a_Cuenta = False
+        Dim sLinVto As String = ""
+        Generar_Cobro = False
         Try
             sTIPO = oForm.DataSources.UserDataSources.Item("UDTIPO").Value.ToString
 
@@ -196,32 +197,39 @@ Public Class EXO_COBROTF
             End Select
             sAccount = objGlobal.refDi.SQL.sqlStringB1(sSQL)
             ORCT.CashAccount = sAccount
-            ORCT.Remarks = "Entraga Nº" & oForm.DataSources.UserDataSources.Item("UDDOCNUM").Value.ToString
+            ORCT.Remarks = "Factura Nº" & oForm.DataSources.UserDataSources.Item("UDDOCNUM").Value.ToString
+            ORCT.Invoices.SumApplied = EXO_GLOBALES.DblTextToNumber(objGlobal.compañia, oForm.DataSources.UserDataSources.Item("UDIMP").Value.ToString)
+            ORCT.Invoices.InvoiceType = SAPbobsCOM.BoRcptInvTypes.it_Invoice
+            ORCT.Invoices.DocEntry = CInt(oForm.DataSources.UserDataSources.Item("UDDOCENTRY").Value.ToString)
+            sSQL = "SELECT TOP 1 ""InstlmntID""  FROM INV6 T0 WHERE ""DocEntry""=" & oForm.DataSources.UserDataSources.Item("UDDOCENTRY").Value.ToString & " And ""ObjType"" ='13' and ""Status""='O' "
+            sLinVto = objGlobal.refDi.SQL.sqlStringB1(sSQL)
+            ORCT.Invoices.InstallmentId = CInt(sLinVto)
+            ORCT.Invoices.Add()
             If sAccount <> "" Then
                 If ORCT.Add() = 0 Then
                     objGlobal.compañia.GetNewObjectCode(sDocEntryORCT)
-                    objGlobal.SBOApp.StatusBar.SetText("Creado cobro a cuenta. Se procede a actualizar la entrega...", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
+                    objGlobal.SBOApp.StatusBar.SetText("Creado cobro. Se procede a actualizar la factura...", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
                     sSQL = "Select ""DocNum"" FROM ""ORCT"" WHERE ""DocEntry""=" & sDocEntryORCT
                     sDocNumORCT = objGlobal.refDi.SQL.sqlStringB1(sSQL)
 
-                    sSQL = "UPDATE ODLN Set "
+                    sSQL = "UPDATE OINV Set "
                     sSQL &= " ""U_EXO_CDOCENTRY""='" & sDocEntryORCT & "', "
                     sSQL &= " ""U_EXO_CDOCNUM""='" & sDocNumORCT & "', "
                     sSQL &= " ""U_EXO_CTIPO""='" & sTIPO & "' "
                     sSQL &= " WHERE ""DocEntry""= " & oForm.DataSources.UserDataSources.Item("UDDOCENTRY").Value.ToString
                     If objGlobal.refDi.SQL.executeNonQuery(sSQL) = True Then
-                        objGlobal.SBOApp.StatusBar.SetText("Actualizada la entrega Nº" & oForm.DataSources.UserDataSources.Item("UDDOCNUM").Value.ToString, BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
+                        objGlobal.SBOApp.StatusBar.SetText("Actualizada la factura Nº" & oForm.DataSources.UserDataSources.Item("UDDOCNUM").Value.ToString, BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
                     Else
-                        objGlobal.SBOApp.StatusBar.SetText("No se ha podido actualizar la entrega Nº" & oForm.DataSources.UserDataSources.Item("UDDOCNUM").Value.ToString, BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error)
+                        objGlobal.SBOApp.StatusBar.SetText("No se ha podido actualizar la factura Nº" & oForm.DataSources.UserDataSources.Item("UDDOCNUM").Value.ToString, BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error)
                     End If
-                    Generar_Cobro_a_Cuenta = True
+                    Generar_Cobro = True
                 Else
-                    objGlobal.SBOApp.MessageBox("Error generando cobro a cuenta. Por favor realicelo de forma manual: " + objGlobal.compañia.GetLastErrorDescription)
-                    Generar_Cobro_a_Cuenta = False
+                    objGlobal.SBOApp.MessageBox("Error generando cobro. Por favor realícelo de forma manual: " + objGlobal.compañia.GetLastErrorDescription)
+                    Generar_Cobro = False
                 End If
             Else
                 objGlobal.SBOApp.StatusBar.SetText("No ha definido una cuenta para esta operación. Por favor, revise la parametrización", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error)
-                Generar_Cobro_a_Cuenta = False
+                Generar_Cobro = False
             End If
 
         Catch ex As Exception
