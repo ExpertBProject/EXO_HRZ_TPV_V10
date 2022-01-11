@@ -261,16 +261,16 @@ Public Class EXO_OINV
             oItem.FromPane = 0
             oItem.ToPane = 0
             oItem.AffectsFormMode = False
-            Dim sSerie As String = ""
-            If CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
-                sSerie = CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected.Description.ToString
-            End If
+            'Dim sSerie As String = ""
+            'If CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
+            '    sSerie = CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected.Description.ToString
+            'End If
 
-            Select Case Left(sSerie, 2)
-                Case "TQ" : CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "TICKET VENTA"
-                Case Else : CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "FACTURA VENTA"
-            End Select
-
+            'Select Case Left(sSerie, 2)
+            '    Case "TQ" : CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "TICKET VENTA"
+            '    Case Else : CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "FACTURA VENTA"
+            'End Select
+            CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "FACTURA VENTA"
             oItem.TextStyle = 1 : oItem.FontSize = 18
 #End Region
             oForm.Visible = True
@@ -432,14 +432,15 @@ Public Class EXO_OINV
                 Case "88"
                     If oForm.Visible = True Then
                         Dim sSerie As String = "" : Dim oItem As SAPbouiCOM.Item
-                        If CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
-                            sSerie = CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected.Description.ToString
-                        End If
+                        'If CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
+                        '    sSerie = CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected.Description.ToString
+                        'End If
                         oItem = oForm.Items.Item("lblTIPOA")
-                        Select Case Left(sSerie, 2)
-                            Case "TQ" : CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "TICKET VENTA"
-                            Case Else : CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "FACTURA VENTA"
-                        End Select
+                        CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "FACTURA VENTA"
+                        'Select Case Left(sSerie, 2)
+                        '    Case "TQ" : CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "TICKET VENTA"
+                        '    Case Else : CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "FACTURA VENTA"
+                        'End Select
                     End If
             End Select
 
@@ -469,7 +470,7 @@ Public Class EXO_OINV
 
                             Case SAPbouiCOM.BoEventTypes.et_FORM_DATA_ADD
                                 'Revisamos la serie
-                                Return Revisar_Serie(oForm)
+                               ' Return Revisar_Serie(oForm)
                             Case SAPbouiCOM.BoEventTypes.et_FORM_DATA_DELETE
 
                         End Select
@@ -486,10 +487,11 @@ Public Class EXO_OINV
                                         sSerie = CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected.Description.ToString
                                     End If
                                     oItem = oForm.Items.Item("lblTIPOA")
-                                    Select Case Left(sSerie, 2)
-                                        Case "TQ" : CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "TICKET VENTA"
-                                        Case Else : CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "FACTURA VENTA"
-                                    End Select
+                                    CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "FACTURA VENTA"
+                                    'Select Case Left(sSerie, 2)
+                                    '    Case "TQ" : CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "TICKET VENTA"
+                                    '    Case Else : CType(oItem.Specific, SAPbouiCOM.StaticText).Caption = "FACTURA VENTA"
+                                    'End Select
                                 End If
                             Case SAPbouiCOM.BoEventTypes.et_FORM_DATA_UPDATE
 
@@ -528,51 +530,51 @@ Public Class EXO_OINV
             EXO_CleanCOM.CLiberaCOM.Form(oForm)
         End Try
     End Function
-    Private Function Revisar_Serie(ByRef oForm As SAPbouiCOM.Form) As Boolean
-        Dim sSQL As String = ""
-        Revisar_Serie = False
+    'Private Function Revisar_Serie(ByRef oForm As SAPbouiCOM.Form) As Boolean
+    '    Dim sSQL As String = ""
+    '    Revisar_Serie = False
 
-        Try
-            Dim sCardCode As String = "" : Dim sProp As String = "" : Dim sSerie As String = ""
-            sCardCode = oForm.DataSources.DBDataSources.Item("ODLN").GetValue("CardCode", 0).ToString.Trim
-            sSQL = "SELECT ""QryGroup10"" FROM ""OCRD"" WHERE ""CardCode""='" & sCardCode & "' "
-            sProp = objGlobal.refDi.SQL.sqlStringB1(sSQL)
+    '    Try
+    '        Dim sCardCode As String = "" : Dim sProp As String = "" : Dim sSerie As String = ""
+    '        sCardCode = oForm.DataSources.DBDataSources.Item("ODLN").GetValue("CardCode", 0).ToString.Trim
+    '        sSQL = "SELECT ""QryGroup10"" FROM ""OCRD"" WHERE ""CardCode""='" & sCardCode & "' "
+    '        sProp = objGlobal.refDi.SQL.sqlStringB1(sSQL)
 
-            If CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
-                sSerie = CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected.Description.ToString
-            End If
+    '        If CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
+    '            sSerie = CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected.Description.ToString
+    '        End If
 
-            If sProp = "" Then
-                objGlobal.SBOApp.StatusBar.SetText("Error grave, no se encuentra el Interlocutor.", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
-                objGlobal.SBOApp.MessageBox("Error grave, no se encuentra el Interlocutor.")
-                Exit Function
-            Else
-                Select Case sProp
-                    Case "N"
-                        If Left(sSerie, 2) <> "TQ" Then
-                            Return True
-                        Else
-                            objGlobal.SBOApp.StatusBar.SetText("Por favor, revise la Serie. No es correcta la actual.", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
-                            Return False
-                        End If
-                    Case "Y"
-                        If Left(sSerie, 2) = "TQ" Then
-                            Return True
-                        Else
-                            objGlobal.SBOApp.StatusBar.SetText("Por favor, revise la Serie. No es correcta la actual.", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
-                            Return False
-                        End If
-                End Select
-            End If
+    '        If sProp = "" Then
+    '            objGlobal.SBOApp.StatusBar.SetText("Error grave, no se encuentra el Interlocutor.", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
+    '            objGlobal.SBOApp.MessageBox("Error grave, no se encuentra el Interlocutor.")
+    '            Exit Function
+    '        Else
+    '            Select Case sProp
+    '                Case "N"
+    '                    If Left(sSerie, 2) <> "TQ" Then
+    '                        Return True
+    '                    Else
+    '                        objGlobal.SBOApp.StatusBar.SetText("Por favor, revise la Serie. No es correcta la actual.", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
+    '                        Return False
+    '                    End If
+    '                Case "Y"
+    '                    If Left(sSerie, 2) = "TQ" Then
+    '                        Return True
+    '                    Else
+    '                        objGlobal.SBOApp.StatusBar.SetText("Por favor, revise la Serie. No es correcta la actual.", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
+    '                        Return False
+    '                    End If
+    '            End Select
+    '        End If
 
-            Revisar_Serie = True
+    '        Revisar_Serie = True
 
-        Catch exCOM As System.Runtime.InteropServices.COMException
-            Throw exCOM
-        Catch ex As Exception
-            Throw ex
-        Finally
+    '    Catch exCOM As System.Runtime.InteropServices.COMException
+    '        Throw exCOM
+    '    Catch ex As Exception
+    '        Throw ex
+    '    Finally
 
-        End Try
-    End Function
+    '    End Try
+    'End Function
 End Class
