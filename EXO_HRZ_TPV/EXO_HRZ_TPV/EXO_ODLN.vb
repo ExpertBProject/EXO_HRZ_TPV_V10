@@ -209,13 +209,13 @@ Public Class EXO_ODLN
 #Region "Botones"
             oItem = oForm.Items.Add("btnCOBROT", SAPbouiCOM.BoFormItemTypes.it_BUTTON)
             oItem.Left = oForm.Items.Item("10000330").Left - (oForm.Items.Item("10000330").Width * 2) + 50
-            oItem.Width = (oForm.Items.Item("10000330").Width * 2) - 30
+            oItem.Width = oForm.Items.Item("10000330").Width '(oForm.Items.Item("10000330").Width * 2) - 30
             oItem.Top = oForm.Items.Item("46").Top + 25
             oItem.Height = oForm.Items.Item("2").Height
             oItem.Enabled = False
             Dim oBtnAct As SAPbouiCOM.Button
             oBtnAct = CType(oItem.Specific, Button)
-            oBtnAct.Caption = "Pago Total Tarjeta"
+            oBtnAct.Caption = "PAGO TARJETA"
             oItem.TextStyle = 1
             oItem.LinkTo = "46"
             oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_False)
@@ -229,7 +229,7 @@ Public Class EXO_ODLN
             oItem.Height = oForm.Items.Item("btnCOBROT").Height
             oItem.Enabled = False
             oBtnAct = CType(oItem.Specific, Button)
-            oBtnAct.Caption = "Pago Total Caja"
+            oBtnAct.Caption = "PAGO CAJA"
             oItem.TextStyle = 1
             oItem.LinkTo = "btnCOBROT"
             oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_False)
@@ -243,7 +243,7 @@ Public Class EXO_ODLN
             oItem.Height = oForm.Items.Item("btnCOBROT").Height
             oItem.Enabled = False
             oBtnAct = CType(oItem.Specific, Button)
-            oBtnAct.Caption = "Cancelar Pago Asociado"
+            oBtnAct.Caption = "CANCELAR PAGO"
             oItem.TextStyle = 1
             oItem.LinkTo = "btnCOBROT"
             oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_False)
