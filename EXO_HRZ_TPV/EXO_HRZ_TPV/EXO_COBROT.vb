@@ -109,7 +109,8 @@ Public Class EXO_COBROT
                 Select Case sTipo
                     Case "C"
                     Case "V"
-                        oForm.DataSources.UserDataSources.Item("UDCLI").ValueEx = oForm.DataSources.UserDataSources.Item("UDIMP").ValueEx
+                        Dim dImporte As Double = EXO_GLOBALES.DblTextToNumber(objGlobal.compañia, oForm.DataSources.UserDataSources.Item("UDIMP").ValueEx)
+                        oForm.DataSources.UserDataSources.Item("UDCLI").ValueEx = EXO_GLOBALES.DblNumberToText(objGlobal.compañia, dImporte, EXO_GLOBALES.FuenteInformacion.Otros)
                 End Select
             End If
 

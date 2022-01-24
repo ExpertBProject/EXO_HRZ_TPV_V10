@@ -349,7 +349,8 @@ Public Class EXO_ODLN
             oForm.DataSources.UserDataSources.Item("UDCARDCODE").ValueEx = oFormODLN.DataSources.DBDataSources.Item("ODLN").GetValue("CardCode", 0).ToString
             oForm.DataSources.UserDataSources.Item("UDDOCENTRY").ValueEx = oFormODLN.DataSources.DBDataSources.Item("ODLN").GetValue("DocEntry", 0).ToString
             oForm.DataSources.UserDataSources.Item("UDDOCNUM").ValueEx = oFormODLN.DataSources.DBDataSources.Item("ODLN").GetValue("DocNum", 0).ToString
-            oForm.DataSources.UserDataSources.Item("UDIMP").ValueEx = oFormODLN.DataSources.DBDataSources.Item("ODLN").GetValue("DocTotal", 0).ToString
+            Dim dImporte As Double = EXO_GLOBALES.DblTextToNumber(objGlobal.compañia, oFormODLN.DataSources.DBDataSources.Item("ODLN").GetValue("DocTotal", 0).ToString)
+            oForm.DataSources.UserDataSources.Item("UDIMP").ValueEx = EXO_GLOBALES.DblNumberToText(objGlobal.compañia, dImporte, EXO_GLOBALES.FuenteInformacion.Otros)
             CType(oForm.Items.Item("lblDOCNUM").Specific, SAPbouiCOM.StaticText).Item.TextStyle = 1
             CType(oForm.Items.Item("txtDOCNUM").Specific, SAPbouiCOM.EditText).Item.TextStyle = 1
             CType(oForm.Items.Item("txtDOCNUM").Specific, SAPbouiCOM.EditText).Item.AffectsFormMode = False
