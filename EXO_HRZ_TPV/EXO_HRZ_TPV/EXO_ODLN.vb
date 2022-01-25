@@ -134,6 +134,7 @@ Public Class EXO_ODLN
             oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_False)
             oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, SAPbouiCOM.BoAutoFormMode.afm_Add, SAPbouiCOM.BoModeVisualBehavior.mvb_False)
             oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, SAPbouiCOM.BoAutoFormMode.afm_Ok, SAPbouiCOM.BoModeVisualBehavior.mvb_False)
+            oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Visible, SAPbouiCOM.BoAutoFormMode.afm_Ok, SAPbouiCOM.BoModeVisualBehavior.mvb_True)
 
             oItem = oForm.Items.Add("IrPago", BoFormItemTypes.it_LINKED_BUTTON)
             oItem.Top = oForm.Items.Item("txtCDEntry").Top  'Incidencia
@@ -170,6 +171,7 @@ Public Class EXO_ODLN
             oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_False)
             oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, SAPbouiCOM.BoAutoFormMode.afm_Add, SAPbouiCOM.BoModeVisualBehavior.mvb_False)
             oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, SAPbouiCOM.BoAutoFormMode.afm_Ok, SAPbouiCOM.BoModeVisualBehavior.mvb_False)
+            oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Visible, SAPbouiCOM.BoAutoFormMode.afm_Ok, SAPbouiCOM.BoModeVisualBehavior.mvb_True)
 
             oItem = oForm.Items.Add("lblCDNum", BoFormItemTypes.it_STATIC)
             oItem.Top = oForm.Items.Item("txtCDNum").Top
@@ -195,6 +197,7 @@ Public Class EXO_ODLN
             oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_False)
             oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, SAPbouiCOM.BoAutoFormMode.afm_Add, SAPbouiCOM.BoModeVisualBehavior.mvb_False)
             oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, SAPbouiCOM.BoAutoFormMode.afm_Ok, SAPbouiCOM.BoModeVisualBehavior.mvb_False)
+            oItem.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Visible, SAPbouiCOM.BoAutoFormMode.afm_Ok, SAPbouiCOM.BoModeVisualBehavior.mvb_True)
 
             oItem = oForm.Items.Add("lblCTipo", BoFormItemTypes.it_STATIC)
             oItem.Top = oForm.Items.Item("txtCTipo").Top
@@ -208,8 +211,8 @@ Public Class EXO_ODLN
 #End Region
 #Region "Botones"
             oItem = oForm.Items.Add("btnCOBROT", SAPbouiCOM.BoFormItemTypes.it_BUTTON)
-            oItem.Left = oForm.Items.Item("10000330").Left - (oForm.Items.Item("10000330").Width * 2) + 50
-            oItem.Width = oForm.Items.Item("10000330").Width '(oForm.Items.Item("10000330").Width * 2) - 30
+            oItem.Left = oForm.Items.Item("10000329").Left - (oForm.Items.Item("10000329").Width * 2) + 50
+            oItem.Width = oForm.Items.Item("10000329").Width '(oForm.Items.Item("10000330").Width * 2) - 30
             oItem.Top = oForm.Items.Item("46").Top + 25
             oItem.Height = oForm.Items.Item("2").Height
             oItem.Enabled = False
@@ -255,7 +258,7 @@ Public Class EXO_ODLN
             oItem.Top = oForm.Items.Item("btnCOBROT").Top
             oItem.Left = oForm.Items.Item("15").Left
             oItem.Height = (oForm.Items.Item("230").Height * 2)
-            oItem.Width = (oForm.Items.Item("230").Width * 2) - 20
+            oItem.Width = (oForm.Items.Item("230").Width * 2) - 25
             oItem.LinkTo = "15"
             oItem.FromPane = 0
             oItem.ToPane = 0

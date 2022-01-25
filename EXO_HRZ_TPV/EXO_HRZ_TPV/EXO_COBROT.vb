@@ -197,6 +197,14 @@ Public Class EXO_COBROT
             sAccount = objGlobal.refDi.SQL.sqlStringB1(sSQL)
             ORCT.CashAccount = sAccount
             ORCT.Remarks = "Entrega Nº" & oForm.DataSources.UserDataSources.Item("UDDOCNUM").Value.ToString
+
+            Select Case sTIPO
+                Case "C"
+                    ORCT.CounterReference = "CAJA"
+                Case "V"
+                    ORCT.CounterReference = "VISA"
+            End Select
+
             If sAccount <> "" Then
                 If ORCT.Add() = 0 Then
                     objGlobal.compañia.GetNewObjectCode(sDocEntryORCT)
