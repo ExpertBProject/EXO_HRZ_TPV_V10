@@ -137,6 +137,10 @@ Public Class EXO_Apertura
                     Select Case infoEvento.FormTypeEx
                         Case "EXOAPERTURA"
                             Select Case infoEvento.EventType
+                                Case SAPbouiCOM.BoEventTypes.et_FORM_VISIBLE
+                                    If EventHandler_Form_Visible(objGlobal, infoEvento) = False Then
+                                        Return False
+                                    End If
                                 Case SAPbouiCOM.BoEventTypes.et_FORM_LOAD
 
                                 Case SAPbouiCOM.BoEventTypes.et_CHOOSE_FROM_LIST
@@ -167,6 +171,62 @@ Public Class EXO_Apertura
         Catch ex As Exception
             objGlobal.Mostrar_Error(ex, EXO_UIAPI.EXO_UIAPI.EXO_TipoMensaje.Excepcion)
             Return False
+        End Try
+    End Function
+    Private Function EventHandler_Form_Visible(ByRef objGlobal As EXO_UIAPI.EXO_UIAPI, ByRef pVal As ItemEvent) As Boolean
+        Dim oForm As SAPbouiCOM.Form = Nothing
+        Dim sSQL As String = ""
+        EventHandler_Form_Visible = False
+        Dim dFecha As Date = New Date(Now.Year, Now.Month, Now.Day)
+        Try
+            oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
+            If oForm.Visible = True Then
+                'Cargamos combo de almacén
+                If CargaComboAlm(oForm) = False Then
+                    Return False
+                Else
+                    'Ponemos el valor por defecto del usuario.
+                    sSQL = "SELECT OUDG.""Warehouse"" FROM OUSR "
+                    sSQL &= " INNER JOIN OUDG ON OUDG.""Code""=OUSR.""DfltsGroup"" "
+                    sSQL &= " WHERE ""USERID""='" & objGlobal.compañia.UserSignature & "'" 'Buscamos el valor que tienen las opciones de usuario
+                    Dim sALM As String = objGlobal.refDi.SQL.sqlStringB1(sSQL)
+                    If sALM.Trim <> "" Then
+                        CType(oForm.Items.Item("cbALM").Specific, SAPbouiCOM.ComboBox).Select(sALM.Trim, BoSearchKey.psk_ByValue)
+                        oForm.Items.Item("cbALM").DisplayDesc = True
+                    End If
+                End If
+            End If
+
+            EventHandler_Form_Visible = True
+
+        Catch exCOM As System.Runtime.InteropServices.COMException
+            objGlobal.Mostrar_Error(exCOM, EXO_UIAPI.EXO_UIAPI.EXO_TipoMensaje.Excepcion)
+        Catch ex As Exception
+            objGlobal.Mostrar_Error(ex, EXO_UIAPI.EXO_UIAPI.EXO_TipoMensaje.Excepcion)
+        Finally
+            EXO_CleanCOM.CLiberaCOM.Form(oForm)
+        End Try
+    End Function
+    Private Function CargaComboAlm(ByRef oForm As SAPbouiCOM.Form) As Boolean
+        CargaComboAlm = False
+        Dim sSQL As String = ""
+        Dim oRs As SAPbobsCOM.Recordset = CType(objGlobal.compañia.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset), SAPbobsCOM.Recordset)
+        Try
+
+            sSQL = "SELECT ""WhsCode"" ""Código"", ""WhsName"" ""Almacén"" FROM OWHS Order BY ""WhsName"" "
+            oRs.DoQuery(sSQL)
+
+            objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("cbALM").Specific, SAPbouiCOM.ComboBox).ValidValues, sSQL)
+
+            CargaComboAlm = True
+
+        Catch exCOM As System.Runtime.InteropServices.COMException
+            Throw exCOM
+        Catch ex As Exception
+            Throw ex
+        Finally
+
+            EXO_CleanCOM.CLiberaCOM.liberaCOM(CType(oRs, Object))
         End Try
     End Function
     Private Function EventHandler_ItemPressed_After(ByRef pVal As ItemEvent) As Boolean

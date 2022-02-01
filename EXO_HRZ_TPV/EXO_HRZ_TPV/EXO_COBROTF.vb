@@ -102,10 +102,11 @@ Public Class EXO_COBROTF
     Private Function EventHandler_Form_Visible(ByRef objGlobal As EXO_UIAPI.EXO_UIAPI, ByRef pVal As ItemEvent) As Boolean
         Dim oForm As SAPbouiCOM.Form = Nothing
         EventHandler_Form_Visible = False
-
+        Dim dFecha As Date = New Date(Now.Year, Now.Month, Now.Day)
         Try
             oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
             If oForm.Visible = True Then
+                oForm.DataSources.UserDataSources.Item("UDFECHA").Value = Now.Year.ToString("0000") & Now.Month.ToString("00") & Now.Day.ToString("00")
                 Dim sTipo As String = oForm.DataSources.UserDataSources.Item("UDTIPO").Value.ToString
                 Select Case sTipo
                     Case "C"
@@ -197,7 +198,18 @@ Public Class EXO_COBROTF
             End Select
             sAccount = objGlobal.refDi.SQL.sqlStringB1(sSQL)
             ORCT.CashAccount = sAccount
+            Dim sFecha As String = oForm.DataSources.UserDataSources.Item("UDFECHA").ValueEx.ToString
+            Dim dFecha As Date = New Date(CType(Left(sFecha, 4), Integer), CType(Mid(sFecha, 5, 2), Integer), CType(Right(sFecha, 2), Integer))
+            Select Case sTIPO
+                Case "C"
+                    ORCT.CounterReference = "CAJA"
+                Case "V"
+                    ORCT.CounterReference = "VISA"
+            End Select
+            ORCT.DocDate = dFecha
+            ORCT.TransferDate = dFecha
             ORCT.Remarks = "Factura Nº" & oForm.DataSources.UserDataSources.Item("UDDOCNUM").Value.ToString
+            ORCT.UserFields.Fields.Item("U_EXO_SERIE").Value = oForm.DataSources.UserDataSources.Item("UDSERIE").Value.ToString
             ORCT.Invoices.SumApplied = EXO_GLOBALES.DblTextToNumber(objGlobal.compañia, oForm.DataSources.UserDataSources.Item("UDIMP").Value.ToString)
             ORCT.Invoices.InvoiceType = SAPbobsCOM.BoRcptInvTypes.it_Invoice
             ORCT.Invoices.DocEntry = CInt(oForm.DataSources.UserDataSources.Item("UDDOCENTRY").Value.ToString)

@@ -57,13 +57,18 @@ Public Class INICIO
         If objGlobal.refDi.comunes.esAdministrador Then
 
             sXML = objGlobal.funciones.leerEmbebido(Me.GetType(), "UDFs_ODLN.xml")
-            objGlobal.refDi.comunes.LoadBDFromXML(sXML)
             objGlobal.SBOApp.StatusBar.SetText("Validando: UDFs_ODLN", SAPbouiCOM.BoMessageTime.bmt_Medium, SAPbouiCOM.BoStatusBarMessageType.smt_Success)
+            objGlobal.refDi.comunes.LoadBDFromXML(sXML)
+            res = objGlobal.SBOApp.GetLastBatchResults
+
+            sXML = objGlobal.funciones.leerEmbebido(Me.GetType(), "UDFs_ORCT.xml")
+            objGlobal.SBOApp.StatusBar.SetText("Validando: UDFs_ORCT", SAPbouiCOM.BoMessageTime.bmt_Medium, SAPbouiCOM.BoStatusBarMessageType.smt_Success)
+            objGlobal.refDi.comunes.LoadBDFromXML(sXML)
             res = objGlobal.SBOApp.GetLastBatchResults
 
             sXML = objGlobal.funciones.leerEmbebido(Me.GetType(), "UDO_EXO_APERCIERRE.xml")
-            objGlobal.refDi.comunes.LoadBDFromXML(sXML)
             objGlobal.SBOApp.StatusBar.SetText("Validando: UDO_EXO_APERCIERRE", SAPbouiCOM.BoMessageTime.bmt_Medium, SAPbouiCOM.BoStatusBarMessageType.smt_Success)
+            objGlobal.refDi.comunes.LoadBDFromXML(sXML)
             res = objGlobal.SBOApp.GetLastBatchResults
         End If
     End Sub
@@ -73,14 +78,26 @@ Public Class INICIO
         Dim bResultado As Boolean = False
 
         If objGlobal.refDi.comunes.esAdministrador Then
-            sBBDD = objGlobal.compañia.CompanyDB
-            If InStr(sBBDD, "TEST") <> -1 Then
-                sSQL = objGlobal.funciones.leerEmbebido(Me.GetType(), "HANA_copbrosefectivo.sql")
-            Else
-                sSQL = objGlobal.funciones.leerEmbebido(Me.GetType(), "HANA_TEST_copbrosefectivo.sql")
-            End If
+            sSQL = objGlobal.funciones.leerEmbebido(Me.GetType(), "EXO_VentasTPV.sql")
             bResultado = objGlobal.refDi.SQL.executeNonQuery(sSQL)
-            objGlobal.SBOApp.StatusBar.SetText("HANA_copbrosefectivo.sql", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
+            objGlobal.SBOApp.StatusBar.SetText("HANA_VentasTPV.sql", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
+
+            sSQL = objGlobal.funciones.leerEmbebido(Me.GetType(), "EXO_AbonosTPV.sql")
+            bResultado = objGlobal.refDi.SQL.executeNonQuery(sSQL)
+            objGlobal.SBOApp.StatusBar.SetText("HANA_AbonosTPV.sql", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
+
+            'sBBDD = objGlobal.compañia.CompanyDB
+            'If InStr(sBBDD, "TEST") <> -1 Then
+            sSQL = objGlobal.funciones.leerEmbebido(Me.GetType(), "EXO_CobrosEfectivoTPV.sql")
+            'Else
+            '    sSQL = objGlobal.funciones.leerEmbebido(Me.GetType(), "HANA_TEST_copbrosefectivo.sql")
+            'End If
+            bResultado = objGlobal.refDi.SQL.executeNonQuery(sSQL)
+            objGlobal.SBOApp.StatusBar.SetText("EXO_CobrosEfectivoTPV.sql", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
+
+            sSQL = objGlobal.funciones.leerEmbebido(Me.GetType(), "EXO_AbonosEfectivoTPV.sql")
+            bResultado = objGlobal.refDi.SQL.executeNonQuery(sSQL)
+            objGlobal.SBOApp.StatusBar.SetText("EXO_AbonosEfectivoTPV.sql", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
         End If
     End Sub
     Private Sub cargamenu()

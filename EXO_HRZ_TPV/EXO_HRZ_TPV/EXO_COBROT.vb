@@ -101,10 +101,11 @@ Public Class EXO_COBROT
     Private Function EventHandler_Form_Visible(ByRef objGlobal As EXO_UIAPI.EXO_UIAPI, ByRef pVal As ItemEvent) As Boolean
         Dim oForm As SAPbouiCOM.Form = Nothing
         EventHandler_Form_Visible = False
-
+        Dim dFecha As Date = New Date(Now.Year, Now.Month, Now.Day)
         Try
             oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
             If oForm.Visible = True Then
+                oForm.DataSources.UserDataSources.Item("UDFECHA").Value = Now.Year.ToString("0000") & Now.Month.ToString("00") & Now.Day.ToString("00")
                 Dim sTipo As String = oForm.DataSources.UserDataSources.Item("UDTIPO").Value.ToString
                 Select Case sTipo
                     Case "C"
@@ -190,6 +191,10 @@ Public Class EXO_COBROT
             ORCT.CardCode = oForm.DataSources.UserDataSources.Item("UDCARDCODE").Value.ToString
             ORCT.DocType = BoRcptTypes.rCustomer
             ORCT.CashSum = EXO_GLOBALES.DblTextToNumber(objGlobal.compañia, oForm.DataSources.UserDataSources.Item("UDIMP").Value.ToString)
+            Dim sFecha As String = oForm.DataSources.UserDataSources.Item("UDFECHA").ValueEx.ToString
+            Dim dFecha As Date = New Date(CType(Left(sFecha, 4), Integer), CType(Mid(sFecha, 5, 2), Integer), CType(Right(sFecha, 2), Integer))
+            ORCT.DocDate = dFecha
+            ORCT.TransferDate = dFecha
             Select Case sTIPO
                 Case "C" : sSQL = "SELECT ""OUDG"".""CashAcct"" FROM ""OUSR"" INNER JOIN ""OUDG"" ON ""OUDG"".""Code""=""OUSR"".""DfltsGroup"" WHERE ""USER_CODE""='" & objGlobal.compañia.UserName & "' "
                 Case "V" : sSQL = "SELECT ""OUDG"".""CheckAcct"" FROM ""OUSR"" INNER JOIN ""OUDG"" ON ""OUDG"".""Code""=""OUSR"".""DfltsGroup"" WHERE ""USER_CODE""='" & objGlobal.compañia.UserName & "' "
@@ -197,7 +202,7 @@ Public Class EXO_COBROT
             sAccount = objGlobal.refDi.SQL.sqlStringB1(sSQL)
             ORCT.CashAccount = sAccount
             ORCT.Remarks = "Entrega Nº" & oForm.DataSources.UserDataSources.Item("UDDOCNUM").Value.ToString
-
+            ORCT.UserFields.Fields.Item("U_EXO_SERIE").Value = oForm.DataSources.UserDataSources.Item("UDSERIE").Value.ToString
             Select Case sTIPO
                 Case "C"
                     ORCT.CounterReference = "CAJA"

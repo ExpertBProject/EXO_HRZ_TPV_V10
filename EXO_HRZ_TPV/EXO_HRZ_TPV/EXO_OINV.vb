@@ -209,7 +209,7 @@ Public Class EXO_OINV
 #End Region
 #Region "Botones"
             oItem = oForm.Items.Add("btnCOBROT", SAPbouiCOM.BoFormItemTypes.it_BUTTON)
-            oItem.Left = oForm.Items.Item("10000330").Left - (oForm.Items.Item("10000330").Width * 2) + 50
+            oItem.Left = oForm.Items.Item("10000329").Left - oForm.Items.Item("10000329").Width - 5
             oItem.Width = oForm.Items.Item("10000330").Width '(oForm.Items.Item("10000330").Width * 2) - 30
             oItem.Top = oForm.Items.Item("46").Top + 25
             oItem.Height = oForm.Items.Item("2").Height
@@ -350,7 +350,12 @@ Public Class EXO_OINV
             oForm.DataSources.UserDataSources.Item("UDCARDCODE").ValueEx = oFormODLN.DataSources.DBDataSources.Item("OINV").GetValue("CardCode", 0).ToString
             oForm.DataSources.UserDataSources.Item("UDDOCENTRY").ValueEx = oFormODLN.DataSources.DBDataSources.Item("OINV").GetValue("DocEntry", 0).ToString
             oForm.DataSources.UserDataSources.Item("UDDOCNUM").ValueEx = oFormODLN.DataSources.DBDataSources.Item("OINV").GetValue("DocNum", 0).ToString
-            oForm.DataSources.UserDataSources.Item("UDIMP").ValueEx = oFormODLN.DataSources.DBDataSources.Item("OINV").GetValue("DocTotal", 0).ToString
+            If CType(oFormODLN.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
+                oForm.DataSources.UserDataSources.Item("UDSERIE").ValueEx = CType(oFormODLN.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected.Description.ToString
+            End If
+            Dim dImporte As Double = EXO_GLOBALES.DblTextToNumber(objGlobal.compañia, oFormODLN.DataSources.DBDataSources.Item("OINV").GetValue("DocTotal", 0).ToString)
+            dImporte -= EXO_GLOBALES.DblTextToNumber(objGlobal.compañia, oFormODLN.DataSources.DBDataSources.Item("OINV").GetValue("PaidToDate", 0).ToString)
+            oForm.DataSources.UserDataSources.Item("UDIMP").ValueEx = EXO_GLOBALES.DblNumberToText(objGlobal.compañia, dImporte, EXO_GLOBALES.FuenteInformacion.Otros)
             CType(oForm.Items.Item("lblDOCNUM").Specific, SAPbouiCOM.StaticText).Item.TextStyle = 1
             CType(oForm.Items.Item("txtDOCNUM").Specific, SAPbouiCOM.EditText).Item.TextStyle = 1
             CType(oForm.Items.Item("txtDOCNUM").Specific, SAPbouiCOM.EditText).Item.AffectsFormMode = False
@@ -376,8 +381,8 @@ Public Class EXO_OINV
             EXO_CleanCOM.CLiberaCOM.liberaCOM(CType(oForm, Object))
         End Try
     End Function
-    Public Function Cancelar_Cobro(ByRef oFormODLN As SAPbouiCOM.Form) As Boolean
-        Dim sDocEntryCobro As String = oFormODLN.DataSources.DBDataSources.Item("ODLN").GetValue("U_EXO_CDOCENTRY", 0).ToString
+    Public Function Cancelar_Cobro(ByRef oFormOINV As SAPbouiCOM.Form) As Boolean
+        Dim sDocEntryCobro As String = oFormOINV.DataSources.DBDataSources.Item("OINV").GetValue("U_EXO_CDOCENTRY", 0).ToString
         Dim sMensaje As String = ""
         Dim ORCT As SAPbobsCOM.Payments = Nothing
         Cancelar_Cobro = False
@@ -389,7 +394,7 @@ Public Class EXO_OINV
                     If ORCT.GetByKey(CType(sDocEntryCobro, Integer)) = True Then
                         ORCT.CancelbyCurrentSystemDate()
                         If ORCT.Update() <> 0 Then
-                            objGlobal.SBOApp.StatusBar.SetText("No se ha podico cancelar el cobro asociado - " & objGlobal.compañia.GetLastErrorCode & " / " & objGlobal.compañia.GetLastErrorDescription, BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error)
+                            objGlobal.SBOApp.StatusBar.SetText("No se ha podido cancelar el cobro asociado - " & objGlobal.compañia.GetLastErrorCode & " / " & objGlobal.compañia.GetLastErrorDescription, BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error)
                             Exit Function
                         Else
                             sMensaje = "Se ha cancelado correctamente el cobro asociado."

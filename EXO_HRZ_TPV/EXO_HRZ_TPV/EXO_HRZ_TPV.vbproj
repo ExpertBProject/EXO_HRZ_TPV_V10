@@ -213,16 +213,26 @@
     <EmbeddedResource Include="SQL_HANA\HANA_TEST_copbrosefectivo.sql" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="SQL_HANA\EXO_VentasTPV.sql" />
     <EmbeddedResource Include="FORMS\EXO_COBROTF.srf" />
-    <Content Include="SQL_HANA\HANA_copbrosefectivo.sql" />
+    <EmbeddedResource Include="SQL_HANA\EXO_CobrosEfectivoTPV.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SQL_HANA\EXO_AbonosTPV.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="XML_BD\UDFs_ORCT.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SQL_HANA\EXO_AbonosEfectivoTPV.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>IF $(PlatformName) == x64 (
-rem copy $(TargetPath) "E:\Desarrollo\Ficheros\RodamientosHuryza\10.Dll_64\EXT\$(TargetFileName)"
-rem copy $(TargetPath) "E:\Desarrollo\Ficheros\RodamientosHuryza\10.Dll_64\DLLs\$(TargetFileName)"
+copy $(TargetPath) "E:\Desarrollo\Ficheros\10.Dll_64\EXT\$(TargetFileName)"
+copy $(TargetPath) "E:\Desarrollo\Ficheros\RodamientosHuryza\10.Dll_64\DLLs\$(TargetFileName)"
 rem copy $(TargetPath) "C:\Program Files\SAP\SAP Business One\AddOns\EXO\EXO_Kernel_Web\X64Client\DLLs\$(TargetFileName)"
-rem copy $(TargetPath) "E:\Desarrollo\Cliente\9.1.1.0\x64\desarrollo\DLLs\$(TargetFileName)"
+copy $(TargetPath) "E:\Desarrollo\EXO_Kernel_10.0.1.4\x64\desarrollo\DLLs\$(TargetFileName)"
 )
 IF $(PlatformName) == x86 (
 copy $(TargetPath) "E:\Desarrollo\Ficheros\RodamientosHuryza\10.Dll\EXT\$(TargetFileName)"
