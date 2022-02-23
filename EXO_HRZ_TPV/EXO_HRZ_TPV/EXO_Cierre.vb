@@ -134,7 +134,9 @@ Public Class EXO_Cierre
                                 Case SAPbouiCOM.BoEventTypes.et_CLICK
 
                                 Case SAPbouiCOM.BoEventTypes.et_ITEM_PRESSED
-
+                                    If EventHandler_ItemPressed_After(infoEvento) = False Then
+                                        Return False
+                                    End If
                                 Case SAPbouiCOM.BoEventTypes.et_VALIDATE
 
                                 Case SAPbouiCOM.BoEventTypes.et_KEY_DOWN
@@ -183,18 +185,34 @@ Public Class EXO_Cierre
     End Function
     Private Function EventHandler_ItemPressed_After(ByRef pVal As ItemEvent) As Boolean
         Dim oForm As SAPbouiCOM.Form = Nothing
-
+        Dim sSQL As String = ""
         EventHandler_ItemPressed_After = False
 
         Try
             oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
 
             If pVal.ItemUID = "btnAdd" Then
-                Dim oMatLin As SAPbouiCOM.Matrix = CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix)
-                oMatLin.AddRow()
-                oMatLin.FlushToDataSource()
-                oMatLin.LoadFromDataSource()
-                oMatLin.Columns.Item(1).Cells.Item(oMatLin.RowCount).Click()
+                If pVal.ActionSuccess = True Then
+                    'Borramos ya que cuando actualizamos da un error.
+                    'Intenta añadirlas todas de nuevo y no lo actualiza
+                    sSQL = "DELETE FROM ""@EXO_APERCIERREL""  WHERE ""DocEntry""=" & CType(oForm.Items.Item("txtDoc").Specific, SAPbouiCOM.EditText).Value.ToString
+                    objGlobal.refDi.SQL.sqlUpdB1(sSQL)
+                    '###################################################
+                    Dim oMatLin As SAPbouiCOM.Matrix = CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix)
+                    oMatLin.AddRow()
+                    oMatLin.FlushToDataSource()
+                    oMatLin.LoadFromDataSource()
+                    oMatLin.Columns.Item(1).Cells.Item(oMatLin.RowCount).Click()
+                    'Sumamos campos                   
+                    Dim nNumLin As Integer = oMatLin.VisualRowCount
+                    Dim dTGastos As Double = 0
+                    For i = 1 To nNumLin
+                        Dim sImporte As String = CType(oMatLin.Columns.Item("C_0_2").Cells.Item(i).Specific, SAPbouiCOM.EditText).Value.ToString
+                        dTGastos += EXO_GLOBALES.DblTextToNumber(objGlobal.compañia, sImporte)
+                    Next
+                    oForm.DataSources.UserDataSources.Item("dsGastos").Value = EXO_GLOBALES.DblNumberToText(objGlobal.compañia, dTGastos, EXO_GLOBALES.FuenteInformacion.Visual)
+                    PintoValores(oForm)
+                End If
             ElseIf pVal.ItemUID = "btnRemove" Then
                 Dim oMatLin As SAPbouiCOM.Matrix = CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix)
                 oForm.Freeze(True)
@@ -217,7 +235,7 @@ Public Class EXO_Cierre
 
                 oForm.Freeze(False)
             End If
-            EventHandler_ItemPressed_After = True
+                EventHandler_ItemPressed_After = True
 
         Catch exCOM As System.Runtime.InteropServices.COMException
             Throw exCOM
@@ -399,7 +417,6 @@ Public Class EXO_Cierre
         Validar = False
 
         Try
-
 #Region "Valido fechas"
             Dim cFechCierre As String = oForm.DataSources.DBDataSources.Item("@EXO_APERCIERRE").GetValue("U_EXO_FechaCierre", 0).Trim()
             Dim cFechApertura As String = oForm.DataSources.DBDataSources.Item("@EXO_APERCIERRE").GetValue("U_EXO_FechaAper", 0).Trim()
