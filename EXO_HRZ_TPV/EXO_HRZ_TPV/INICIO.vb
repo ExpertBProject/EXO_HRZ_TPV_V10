@@ -6,6 +6,7 @@ Public Class INICIO
     Inherits EXO_UIAPI.EXO_DLLBase
 #Region "Variables globales"
     Public Shared _lgHayqueSalir As Boolean = False
+    Public Shared _bActualiza As Boolean = False
 #End Region
     Public Sub New(ByRef oObjGlobal As EXO_UIAPI.EXO_UIAPI, ByRef actualizar As Boolean, usaLicencia As Boolean, idAddOn As Integer)
         MyBase.New(oObjGlobal, actualizar, False, idAddOn)

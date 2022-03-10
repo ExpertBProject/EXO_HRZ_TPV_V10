@@ -105,6 +105,7 @@ Public Class EXO_COBROT
         Try
             oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
             If oForm.Visible = True Then
+                INICIO._bActualiza = True
                 oForm.DataSources.UserDataSources.Item("UDFECHA").Value = Now.Year.ToString("0000") & Now.Month.ToString("00") & Now.Day.ToString("00")
                 Dim sTipo As String = oForm.DataSources.UserDataSources.Item("UDTIPO").Value.ToString
                 Select Case sTipo
@@ -135,9 +136,12 @@ Public Class EXO_COBROT
 
             Select Case pVal.ItemUID
                 Case "1"
-                    Return Generar_Cobro_a_Cuenta(oForm)
-                    objGlobal.SBOApp.ActivateMenuItem("1044")
-                    objGlobal.SBOApp.ActivateMenuItem("1304")
+                    If INICIO._bActualiza = True Then
+                        INICIO._bActualiza = False
+                        Return Generar_Cobro_a_Cuenta(oForm)
+                        objGlobal.SBOApp.ActivateMenuItem("1044")
+                        objGlobal.SBOApp.ActivateMenuItem("1304")
+                    End If
             End Select
 
             EventHandler_ItemPressed_Before = True
