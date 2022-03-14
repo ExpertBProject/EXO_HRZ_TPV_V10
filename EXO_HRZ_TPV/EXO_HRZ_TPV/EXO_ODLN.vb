@@ -288,29 +288,51 @@ Public Class EXO_ODLN
     End Function
     Private Function EventHandler_ItemPressed_After(ByRef pVal As ItemEvent) As Boolean
         Dim oForm As SAPbouiCOM.Form = Nothing
-
+        Dim sMensaje As String = ""
         EventHandler_ItemPressed_After = False
 
         Try
             oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
-
+            Dim sDocEntry As String = oForm.DataSources.DBDataSources.Item("ODLN").GetValue("U_EXO_CDOCENTRY", 0).ToString
+            Dim sDocNum As String = oForm.DataSources.DBDataSources.Item("ODLN").GetValue("U_EXO_CDOCNUM", 0).ToString
             Select Case pVal.ItemUID
                 Case "btnCOBROT"
                     If pVal.ActionSuccess = True Then
-                        If CargarFormCOBROT(oForm, "V") = False Then
-                            Exit Function
+                        If sDocEntry = "" And sDocNum = "" Then
+                            If CargarFormCOBROT(oForm, "V") = False Then
+                                Exit Function
+                            End If
+                        Else
+                            sMensaje = "Esta entrega ya tiene un cobro asignado. Por favor, primero cancele el cobro."
+                            objGlobal.SBOApp.StatusBar.SetText(sMensaje, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning)
+                            objGlobal.SBOApp.MessageBox(sMensaje)
+                        End If
+                        If objGlobal.SBOApp.Menus.Item("1304").Enabled = True Then
+                            objGlobal.SBOApp.ActivateMenuItem("1304")
                         End If
                     End If
                 Case "btnCOBROC"
                     If pVal.ActionSuccess = True Then
-                        If CargarFormCOBROT(oForm, "C") = False Then
-                            Exit Function
+                        If sDocEntry = "" And sDocNum = "" Then
+                            If CargarFormCOBROT(oForm, "C") = False Then
+                                Exit Function
+                            End If
+                        Else
+                            sMensaje = "Esta entrega ya tiene un cobro asignado. Por favor, primero cancele el cobro."
+                            objGlobal.SBOApp.StatusBar.SetText(sMensaje, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning)
+                            objGlobal.SBOApp.MessageBox(sMensaje)
+                        End If
+                        If objGlobal.SBOApp.Menus.Item("1304").Enabled = True Then
+                            objGlobal.SBOApp.ActivateMenuItem("1304")
                         End If
                     End If
                 Case "btnCOBROCN"
                     If pVal.ActionSuccess = True Then
                         If Cancelar_Cobro(oForm) = False Then
                             Exit Function
+                        End If
+                        If objGlobal.SBOApp.Menus.Item("1304").Enabled = True Then
+                            objGlobal.SBOApp.ActivateMenuItem("1304")
                         End If
                     End If
             End Select
@@ -384,8 +406,10 @@ Public Class EXO_ODLN
     End Function
     Public Function Cancelar_Cobro(ByRef oFormODLN As SAPbouiCOM.Form) As Boolean
         Dim sDocEntryCobro As String = oFormODLN.DataSources.DBDataSources.Item("ODLN").GetValue("U_EXO_CDOCENTRY", 0).ToString
+        Dim sDocEntry As String = oFormODLN.DataSources.DBDataSources.Item("ODLN").GetValue("DocEntry", 0).ToString
         Dim sMensaje As String = ""
         Dim ORCT As SAPbobsCOM.Payments = Nothing
+        Dim sSQL As String = ""
         Cancelar_Cobro = False
 
         Try
@@ -393,14 +417,20 @@ Public Class EXO_ODLN
                 If objGlobal.SBOApp.MessageBox("¿Está seguro que quiere cancelar el cobro asociado?", 1, "Sí", "No") = 1 Then
                     ORCT = CType(objGlobal.compañia.GetBusinessObject(BoObjectTypes.oIncomingPayments), SAPbobsCOM.Payments)
                     If ORCT.GetByKey(CType(sDocEntryCobro, Integer)) = True Then
-                        ORCT.CancelbyCurrentSystemDate()
-                        If ORCT.Update() <> 0 Then
+                        Dim iRetCode As Integer = ORCT.CancelbyCurrentSystemDate()
+                        If iRetCode <> 0 Then
                             objGlobal.SBOApp.StatusBar.SetText("No se ha podido cancelar el cobro asociado - " & objGlobal.compañia.GetLastErrorCode & " / " & objGlobal.compañia.GetLastErrorDescription, BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error)
                             Exit Function
                         Else
                             sMensaje = "Se ha cancelado correctamente el cobro asociado."
                             objGlobal.SBOApp.StatusBar.SetText(sMensaje, BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
                             objGlobal.SBOApp.MessageBox(sMensaje)
+                            sSQL = "UPDATE """ & objGlobal.compañia.CompanyDB & """.""ODLN"" SET ""U_EXO_CDOCENTRY""='', ""U_EXO_CDOCNUM""='', ""U_EXO_CTIPO""='-' "
+                            sSQL &= " WHERE ""DocEntry""=" & sDocEntry
+                            objGlobal.refDi.SQL.sqlUpdB1(sSQL)
+                            If objGlobal.SBOApp.Menus.Item("1304").Enabled = True Then
+                                objGlobal.SBOApp.ActivateMenuItem("1304")
+                            End If
                         End If
                     Else
                         sMensaje = "Error grave. No se ha encontrado el cobro asociado."
