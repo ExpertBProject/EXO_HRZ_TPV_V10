@@ -310,16 +310,34 @@ Public Class EXO_Apertura
     Private Function Validar(ByRef oForm As SAPbouiCOM.Form) As Boolean
         Dim sSQL As String = ""
         Validar = False
-
+        Dim cFechApertura As String = ""
+        Dim cAlmacen As String = ""
+        Dim oRs As SAPbobsCOM.Recordset = CType(objGlobal.compañia.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset), SAPbobsCOM.Recordset)
         Try
 #Region "Obligatorio fecha apertura"
-            Dim cFechApertura As String = oForm.DataSources.DBDataSources.Item("@EXO_APERCIERRE").GetValue("U_EXO_FechaAper", 0).Trim()
+            cFechApertura = oForm.DataSources.DBDataSources.Item("@EXO_APERCIERRE").GetValue("U_EXO_FechaAper", 0).Trim()
             If cFechApertura = "" Then
                 objGlobal.SBOApp.MessageBox("Ha de introducir Fecha de Apertura", 2, "Si", "No", "")
                 Return False
             End If
 #End Region
+#Region "Control si ya está abierto en el mismo almacén y mismo día"
+            cFechApertura = oForm.DataSources.DBDataSources.Item("@EXO_APERCIERRE").GetValue("U_EXO_FechaAper", 0).Trim()
+            cAlmacen = oForm.DataSources.DBDataSources.Item("@EXO_APERCIERRE").GetValue("U_EXO_ALM", 0).Trim()
+            If cFechApertura <> "" And cAlmacen <> "" Then
+                sSQL = "SELECT * FROM ""@EXO_APERCIERRE"" WHERE ""U_EXO_ALM""='" & cAlmacen & "' "
+                sSQL &= " And ifnull(""U_EXO_FechaCierre"",'19000101')='19000101' and ""U_EXO_FechaAper""='" & cFechApertura & "'"
+                oRs.DoQuery(sSQL)
+                If oRs.RecordCount > 0 Then
+                    objGlobal.SBOApp.MessageBox("No se puede abrir dos veces la caja el mismo día.",)
+                    oForm.Mode = BoFormMode.fm_FIND_MODE
+                    CType(oForm.Items.Item("txtDoc").Specific, SAPbouiCOM.EditText).Value = oRs.Fields.Item("DocEntry").Value.ToString
+                    oForm.Items.Item("1").Click()
+                    Exit Function
+                End If
 
+            End If
+#End Region
 
 #Region "Aviso si el dinero inicial es 0"
             Dim cAux As String = oForm.DataSources.DBDataSources.Item("@EXO_APERCIERRE").GetValue("U_EXO_SaldoIncial", 0).Trim()
