@@ -137,20 +137,25 @@ Public Class EXO_COBROT
             Select Case pVal.ItemUID
                 Case "1"
                     If INICIO._bActualiza = True Then
+                        oForm.Freeze(True)
                         INICIO._bActualiza = False
                         Return Generar_Cobro_a_Cuenta(oForm)
                         objGlobal.SBOApp.ActivateMenuItem("1044")
                         objGlobal.SBOApp.ActivateMenuItem("1304")
+                        oForm.Close()
                     End If
             End Select
 
             EventHandler_ItemPressed_Before = True
 
         Catch exCOM As System.Runtime.InteropServices.COMException
+            oForm.Freeze(False)
             Throw exCOM
         Catch ex As Exception
+            oForm.Freeze(False)
             Throw ex
         Finally
+            oForm.Freeze(False)
             EXO_CleanCOM.CLiberaCOM.Form(oForm)
         End Try
     End Function

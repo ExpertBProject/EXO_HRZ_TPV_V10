@@ -286,24 +286,47 @@ Public Class EXO_OINV
     End Function
     Private Function EventHandler_ItemPressed_After(ByRef pVal As ItemEvent) As Boolean
         Dim oForm As SAPbouiCOM.Form = Nothing
-
+        Dim sSQL As String = ""
+        Dim sMensaje As String = ""
         EventHandler_ItemPressed_After = False
 
         Try
+            If objGlobal.SBOApp.Menus.Item("1304").Enabled = True Then
+                objGlobal.SBOApp.ActivateMenuItem("1304")
+            End If
+
             oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
+            Dim sDocEntryDoc As String = oForm.DataSources.DBDataSources.Item("OINV").GetValue("DocEntry", 0).ToString
+            sSQL = "SELECT ""U_EXO_CDOCENTRY"" FROM OINV Where ""DocEntry""=" & sDocEntryDoc
+            Dim sDocEntry As String = objGlobal.refDi.SQL.sqlStringB1(sSQL)
+            sSQL = "SELECT ""U_EXO_CDOCNUM"" FROM OINV Where ""DocEntry""=" & sDocEntryDoc
+            Dim sDocNum As String = objGlobal.refDi.SQL.sqlStringB1(sSQL)
 
             Select Case pVal.ItemUID
                 Case "btnCOBROT"
                     If pVal.ActionSuccess = True Then
-                        If CargarFormCOBROT(oForm, "V") = False Then
-                            Exit Function
+                        If sDocEntry = "" And sDocNum = "" Then
+                            If CargarFormCOBROT(oForm, "V") = False Then
+                                Exit Function
+                            End If
                         End If
+                    Else
+                        sMensaje = "Esta Factura ya tiene un cobro asignado. Por favor, primero cancele el cobro."
+                        objGlobal.SBOApp.StatusBar.SetText(sMensaje, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning)
+                        objGlobal.SBOApp.MessageBox(sMensaje)
                     End If
                 Case "btnCOBROC"
                     If pVal.ActionSuccess = True Then
-                        If CargarFormCOBROT(oForm, "C") = False Then
-                            Exit Function
+                        If sDocEntry = "" And sDocNum = "" Then
+                            If CargarFormCOBROT(oForm, "C") = False Then
+                                Exit Function
+                            End If
+                        Else
+                            sMensaje = "Esta Factura ya tiene un cobro asignado. Por favor, primero cancele el cobro."
+                            objGlobal.SBOApp.StatusBar.SetText(sMensaje, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning)
+                            objGlobal.SBOApp.MessageBox(sMensaje)
                         End If
+
                     End If
                 Case "btnCOBROCN"
                     If pVal.ActionSuccess = True Then
@@ -405,6 +428,9 @@ Public Class EXO_OINV
                         sMensaje = "Error grave. No se ha encontrado el cobro asociado."
                         objGlobal.SBOApp.StatusBar.SetText(sMensaje, BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error)
                         objGlobal.SBOApp.MessageBox(sMensaje)
+                    End If
+                    If objGlobal.SBOApp.Menus.Item("1304").Enabled = True Then
+                        objGlobal.SBOApp.ActivateMenuItem("1304")
                     End If
                 End If
             Else
