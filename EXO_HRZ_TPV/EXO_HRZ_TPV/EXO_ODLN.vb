@@ -293,19 +293,22 @@ Public Class EXO_ODLN
         EventHandler_ItemPressed_After = False
 
         Try
-            If objGlobal.SBOApp.Menus.Item("1304").Enabled = True Then
-                objGlobal.SBOApp.ActivateMenuItem("1304")
-            End If
+
             oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
-            Dim sDocEntryDoc As String = oForm.DataSources.DBDataSources.Item("ODLN").GetValue("DocEntry", 0).ToString
-            sSQL = "SELECT ""U_EXO_CDOCENTRY"" FROM ODLN Where ""DocEntry""=" & sDocEntryDoc
-            Dim sDocEntry As String = objGlobal.refDi.SQL.sqlStringB1(sSQL)
-            sSQL = "SELECT ""U_EXO_CDOCNUM"" FROM ODLN Where ""DocEntry""=" & sDocEntryDoc
-            Dim sDocNum As String = objGlobal.refDi.SQL.sqlStringB1(sSQL)
+
 
             Select Case pVal.ItemUID
                 Case "btnCOBROT"
                     If pVal.ActionSuccess = True Then
+                        If objGlobal.SBOApp.Menus.Item("1304").Enabled = True Then
+                            objGlobal.SBOApp.ActivateMenuItem("1304")
+                        End If
+                        Dim sDocEntryDoc As String = oForm.DataSources.DBDataSources.Item("ODLN").GetValue("DocEntry", 0).ToString
+                        sSQL = "SELECT ""U_EXO_CDOCENTRY"" FROM ODLN Where ""DocEntry""=" & sDocEntryDoc
+                        Dim sDocEntry As String = objGlobal.refDi.SQL.sqlStringB1(sSQL)
+                        sSQL = "SELECT ""U_EXO_CDOCNUM"" FROM ODLN Where ""DocEntry""=" & sDocEntryDoc
+                        Dim sDocNum As String = objGlobal.refDi.SQL.sqlStringB1(sSQL)
+
                         If sDocEntry = "" And sDocNum = "" Then
                             If CargarFormCOBROT(oForm, "V") = False Then
                                 Exit Function
@@ -318,6 +321,15 @@ Public Class EXO_ODLN
                     End If
                 Case "btnCOBROC"
                     If pVal.ActionSuccess = True Then
+                        If objGlobal.SBOApp.Menus.Item("1304").Enabled = True Then
+                            objGlobal.SBOApp.ActivateMenuItem("1304")
+                        End If
+                        Dim sDocEntryDoc As String = oForm.DataSources.DBDataSources.Item("ODLN").GetValue("DocEntry", 0).ToString
+                        sSQL = "SELECT ""U_EXO_CDOCENTRY"" FROM ODLN Where ""DocEntry""=" & sDocEntryDoc
+                        Dim sDocEntry As String = objGlobal.refDi.SQL.sqlStringB1(sSQL)
+                        sSQL = "SELECT ""U_EXO_CDOCNUM"" FROM ODLN Where ""DocEntry""=" & sDocEntryDoc
+                        Dim sDocNum As String = objGlobal.refDi.SQL.sqlStringB1(sSQL)
+
                         If sDocEntry = "" And sDocNum = "" Then
                             If CargarFormCOBROT(oForm, "C") = False Then
                                 Exit Function
