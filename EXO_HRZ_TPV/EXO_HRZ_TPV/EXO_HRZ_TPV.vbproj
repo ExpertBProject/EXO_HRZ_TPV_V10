@@ -75,29 +75,23 @@
     <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.ReportSource, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.Shared, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
-    <Reference Include="EXO_BasicDLL, Version=9.1.1.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\EXO_Kernel_10.0.1.8\x64\EXO_BasicDLL.dll</HintPath>
+    <Reference Include="EXO_BasicDLL">
+      <HintPath>..\..\..\..\..\..\EXO_Kernel_10.0.1.8\x64\Desarrollo\EXO_BasicDLL.dll</HintPath>
     </Reference>
-    <Reference Include="EXO_CleanCOM, Version=9.1.1.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\EXO_Kernel_10.0.1.8\x64\EXO_CleanCOM.dll</HintPath>
+    <Reference Include="EXO_CleanCOM">
+      <HintPath>..\..\..\..\..\..\EXO_Kernel_10.0.1.8\x64\Desarrollo\EXO_CleanCOM.dll</HintPath>
     </Reference>
-    <Reference Include="EXO_DIAPI, Version=9.1.1.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\EXO_Kernel_10.0.1.8\x64\EXO_DIAPI.dll</HintPath>
+    <Reference Include="EXO_DIAPI">
+      <HintPath>..\..\..\..\..\..\EXO_Kernel_10.0.1.8\x64\Desarrollo\EXO_DIAPI.dll</HintPath>
     </Reference>
-    <Reference Include="EXO_Generales, Version=9.1.1.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\EXO_Kernel_10.0.1.8\x64\EXO_Generales.dll</HintPath>
+    <Reference Include="EXO_Generales">
+      <HintPath>..\..\..\..\..\..\EXO_Kernel_10.0.1.8\x64\Desarrollo\EXO_Generales.dll</HintPath>
     </Reference>
-    <Reference Include="EXO_Log, Version=9.1.1.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\EXO_Kernel_10.0.1.8\x64\EXO_Log.dll</HintPath>
+    <Reference Include="EXO_Log">
+      <HintPath>..\..\..\..\..\..\EXO_Kernel_10.0.1.8\x64\Desarrollo\EXO_Log.dll</HintPath>
     </Reference>
-    <Reference Include="EXO_UIAPI, Version=9.1.1.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\EXO_Kernel_10.0.1.8\x64\EXO_UIAPI.dll</HintPath>
+    <Reference Include="EXO_UIAPI">
+      <HintPath>..\..\..\..\..\..\EXO_Kernel_10.0.1.8\x64\Desarrollo\EXO_UIAPI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -190,6 +184,23 @@
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="SQL_HANA\HANA_TEST_copbrosefectivo.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SQL_HANA\EXO_VentasTPV.sql" />
+    <EmbeddedResource Include="FORMS\EXO_COBROTF.srf" />
+    <EmbeddedResource Include="SQL_HANA\EXO_CobrosEfectivoTPV.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SQL_HANA\EXO_AbonosTPV.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="XML_BD\UDFs_ORCT.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SQL_HANA\EXO_AbonosEfectivoTPV.sql" />
+  </ItemGroup>
+  <ItemGroup>
     <COMReference Include="SAPbobsCOM">
       <Guid>{FC8030BE-F5D2-4B8E-8F92-44228FE30100}</Guid>
       <VersionMajor>10</VersionMajor>
@@ -209,28 +220,11 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="SQL_HANA\HANA_TEST_copbrosefectivo.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="SQL_HANA\EXO_VentasTPV.sql" />
-    <EmbeddedResource Include="FORMS\EXO_COBROTF.srf" />
-    <EmbeddedResource Include="SQL_HANA\EXO_CobrosEfectivoTPV.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="SQL_HANA\EXO_AbonosTPV.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="XML_BD\UDFs_ORCT.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="SQL_HANA\EXO_AbonosEfectivoTPV.sql" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) "E:\Desarrollo\Ficheros\10.Dll_64\EXT\$(TargetFileName)"
 copy $(TargetPath) "E:\Desarrollo\Usuarios\shernandez\EXO_Kernel_10.0.1.8\x64\DLLs\$(TargetFileName)"
-copy $(TargetPath) "E:\Desarrollo\EXO_Kernel_10.0.1.8\x64\DLLs\$(TargetFileName)"</PostBuildEvent>
+copy $(TargetPath) "E:\Desarrollo\EXO_Kernel_10.0.1.8\x64\Desarrollo\DLLs\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -587,7 +587,9 @@ Public Class EXO_ODLN
             sCardCode = oForm.DataSources.DBDataSources.Item("ODLN").GetValue("CardCode", 0).ToString.Trim
             sSQL = "SELECT ""QryGroup10"" FROM ""OCRD"" WHERE ""CardCode""='" & sCardCode & "' "
             sProp = objGlobal.refDi.SQL.sqlStringB1(sSQL)
-
+            If sProp = "" Then
+                sProp = "N"
+            End If
             If CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
                 sSerie = CType(oForm.Items.Item("88").Specific, SAPbouiCOM.ComboBox).Selected.Description.ToString
             End If
